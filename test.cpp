@@ -3,6 +3,9 @@
 #include<iostream>
 using namespace std;
 
-int main(){
-    cout<<5;
+int main()
+{
+    cout << 5;
 }
+
+//demo change
