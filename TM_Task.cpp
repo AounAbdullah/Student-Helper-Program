@@ -1,5 +1,6 @@
 #include <iostream>
-#include <string.h>
+#include <string>
+#include <sstream>
 using namespace std;
 
 class Task
@@ -21,7 +22,7 @@ public:
     }
 
     // getter functions
-    string getName() const
+    string getname() const
     {
         return taskname;
     }
@@ -40,7 +41,7 @@ public:
 
     // setter functions
 
-    void setName(const std::string &name)
+    void setname(const std::string &name)
     {
         taskname = name;
     }
@@ -57,14 +58,40 @@ public:
         is_completed = status;
     }
 
-    bool task_completion(){
+    bool task_completion()
+    {
         return true;
     }
 
-    void update_task(string& name, int priority, string& deadline){
+    void update_task(string &name, int priority, string &deadline)
+    {
         taskname = name;
         task_priority = priority;
         this->deadline = deadline;
     }
-   
+
+    //used for saving information
+    string serialize() const
+    {
+        return taskname + "," + std::to_string(task_priority) + "," + deadline + "," + (is_completed ? "1" : "0");
+    }
+
+    //retrieving information from the file
+    static Task deserialize(const string &serializedTask)
+    {
+        // Assuming the format is "taskname,priority,deadline,isCompleted,category"
+        stringstream ss(serializedTask);
+        string name, deadline, category, completedStr;
+        int priority;
+        bool completed;
+
+        getline(ss, name, ',');
+        ss >> priority;
+        getline(ss, deadline, ',');
+        ss >> completedStr;
+        completed = (completedStr == "1");
+       
+
+        return Task(name, priority, deadline, completed);
+    }
 };
