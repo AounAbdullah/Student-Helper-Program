@@ -1,4 +1,4 @@
-#include <iostream>
+#include <iostream>  // For input/output
 using namespace std;
 //2023049
 //Abdullah Yasin
@@ -9,13 +9,14 @@ class Priority
     public:
 
     //members storing each detail of Priority
-    string priorityname, division;
-    int subdivision;
-    float prioritybudget, divisionbudget, subdivisionbudget;
+    string priorityname;
+    int priorityrank, subdivision, division, prioritybudget, divisionbudget, subdivisionbudget;
 
     //default constrcutor to initialize all members of class
     Priority()
     {
+        priorityrank = NULL;
+        division = NULL;
         subdivision = NULL;
         prioritybudget = NULL;
         divisionbudget = NULL;
@@ -23,26 +24,55 @@ class Priority
     }
 
     //function to set all members of the Priority Class
-    void SetValues(string name, string div, int subdiv, float prbudget, float divbudget, float subdivbudget)
+    void SetValues(string name, int div, int subdiv, int prrank, int totalbudget)
     {
         priorityname = name;
         division = div;
         subdivision = subdiv;
-        prioritybudget = prbudget;
-        divisionbudget = divbudget;
-        subdivisionbudget = subdivbudget;
+        priorityrank = prrank;
+
+        if (priorityrank == 1)
+            prioritybudget = totalbudget * 0.4;
+
+        else if (priorityrank == 2)
+            prioritybudget  = totalbudget * 0.25;
+
+        else if (priorityrank == 3)
+            prioritybudget  = totalbudget * 0.15;
+
+        else if (priorityrank == 4)
+            prioritybudget  = totalbudget * 0.10;
+
+        else if (priorityrank == 5)
+            prioritybudget  = totalbudget * 0.10;
     }
 
 
     //func which calculates division budget of each Priority
-    float Calcdivbudget()
+    int Calcdivbudget()
     {
+        if (division == 0) // indicating no division of budget
+        {
+            divisionbudget = 0;
+        }
+
+        else if (division == 1) // indicating daily division of budget
+        {
+            divisionbudget = prioritybudget/30;
+        }
+
+        else if (division == 2) // indicating weekly division of budget
+        {
+            divisionbudget = prioritybudget/4;
+        }
+
         return divisionbudget;
     }
 
     //func which calculates subdivision budget of each Priority
-    float Calcsubdivbudget()
+    int Calcsubdivbudget()
     {
+        
         return subdivisionbudget;
     }
 
@@ -75,10 +105,10 @@ class BudgetManager
     }
 
     //func to Insert new Priority Node in DLL
-    void InsertNode(string name, string div, int subdiv, float prbudget, float divbudget, float subdivbudget)
+    void InsertNode(string name, int div, int subdiv, int prrank, int totalbudget)
     {
         PriorityNode* newNode = new PriorityNode;    // Create new node
-        newNode->pr.SetValues(name, div, subdiv, prbudget, divbudget, subdivbudget);
+        newNode->pr.SetValues(name, div, subdiv, prrank, totalbudget);
         newNode->next = head;        // New node points to the old head
         newNode->prev = NULL;     // New node's previous is null
 
@@ -104,12 +134,12 @@ class BudgetManager
 
             if (current->pr.divisionbudget != 0 || current->pr.divisionbudget != NULL)
             {
-                cout << "The " << current->pr.division << "budget of is: " << current->pr.divisionbudget << endl;
+                cout << "The " << current->pr.division << "budget of each division is: " << current->pr.divisionbudget << endl;
             }
 
             if (current->pr.subdivisionbudget != 0 || current->pr.subdivisionbudget != NULL)
             {
-                cout << "The subdivison budget is: " << current->pr.subdivisionbudget << endl;
+                cout << "The budget of each subdivision is: " << current->pr.subdivisionbudget << endl;
             }
 
             current = current->next;
@@ -119,7 +149,7 @@ class BudgetManager
     //func to Search & Display specific priority budget 
     void SearchDisplaybudget()
     {
-
+        
     }
 
     //func to Create new file 
