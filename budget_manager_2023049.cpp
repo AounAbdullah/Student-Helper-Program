@@ -147,9 +147,52 @@ class BudgetManager
     }
 
     //func to Search & Display specific priority budget 
-    void SearchDisplaybudget()
+    void SearchDisplaybudget(string searchName) 
     {
+        bool found = false;
         
+        /*
+        // Code for checking if the given Searchname exists or not
+        // Hence reducing worst case time complexity of func
+        for (int i = 0; i < 5; i++)
+        {
+            if (searchName == PriorityNames[i])
+            {
+                found = true;
+                break;
+            }
+        }
+        if (found == false)
+            return;
+        */
+        PriorityNode* current = head;  // Start from the head of the linked list
+
+        while (current != NULL) 
+        {
+            if (current->pr.priorityname == searchName) 
+            {
+                cout << "Priority Name: " << current->pr.priorityname << endl;
+                cout << "Priority Rank: " << current->pr.priorityrank << endl;
+                cout << "Monthly Budget: " << current->pr.prioritybudget << endl;
+
+                if (current->pr.division != NULL && current->pr.divisionbudget != 0) 
+                {
+                    cout << "Division Budget (" << (current->pr.division == 1 ? "Daily" : "Weekly") << "): " << current->pr.divisionbudget << endl;
+                }
+
+                if (current->pr.subdivision != NULL && current->pr.subdivisionbudget != 0) 
+                {
+                    cout << "Subdivision Budget: " << current->pr.subdivisionbudget << endl;
+                }
+                
+                //History.push(current->pr.priorityrank);
+                break;  // Exit loop after finding the priority
+            }
+
+            current = current->next;
+
+        }
+
     }
 
     //func to Create new file 
