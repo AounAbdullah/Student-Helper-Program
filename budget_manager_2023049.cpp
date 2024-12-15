@@ -48,34 +48,37 @@ class Priority
     }
 
 
-    //func which calculates division budget of each Priority
-    int Calcdivbudget()
+    // Func which calculates division budget of each Priority
+    int Calcdivbudget(int prbudget, int d)
     {
-        if (division == 0) // indicating no division of budget
+        if (d == 0) // indicating no division of budget
         {
             divisionbudget = 0;
         }
 
-        else if (division == 1) // indicating daily division of budget
+        else if (d == 1) // indicating daily division of budget
         {
-            divisionbudget = prioritybudget/30;
+            divisionbudget = prbudget/30;
         }
 
-        else if (division == 2) // indicating weekly division of budget
+        else if (d == 2) // indicating weekly division of budget
         {
-            divisionbudget = prioritybudget/4;
+            divisionbudget = prbudget/4;
         }
 
         return divisionbudget;
     }
 
-    //func which calculates subdivision budget of each Priority
-    int Calcsubdivbudget()
+    // Func which calculates subdivision budget of each Priority
+    int Calcsubdivbudget(int d_budget, int s_div)
     {
-        
+        if (s_div == 0)
+        {
+            return 0;
+        }
+        subdivisionbudget = d_budget / s_div;
         return subdivisionbudget;
     }
-
 };
 
 
