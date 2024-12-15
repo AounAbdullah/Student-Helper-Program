@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -16,4 +17,22 @@ string readFile(const string &filename) {
     stringstream buffer;
     buffer << file.rdbuf();
     return buffer.str();
+}
+
+// Function to tokenize text into words
+vector<string> tokenize(const string &text) {
+    vector<string> tokens;
+    string word;
+    for (char c : text) {
+        if (isalnum(c)) {
+            word += tolower(c);
+        } else if (!word.empty()) {
+            tokens.push_back(word);
+            word.clear();
+        }
+    }
+    if (!word.empty()) {
+        tokens.push_back(word);
+    }
+    return tokens;
 }
