@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -36,3 +37,27 @@ vector<string> tokenize(const string &text) {
     }
     return tokens;
 }
+
+// Function to generate N-grams from tokens using a linked list
+list<string> generateNgrams(const vector<string> &tokens, int n) {
+    list<string> ngrams;
+    for (size_t i = 0; i + n <= tokens.size(); ++i) {
+        string ngram;
+        for (int j = 0; j < n; ++j) {
+            ngram += (j > 0 ? " " : "") + tokens[i + j];
+        }
+        ngrams.push_back(ngram);
+    }
+    return ngrams;
+}
+
+/* Function to calculate plagiarism percentage
+float calculatePlagiarism(HashMap &sourceMap, const list<string> &targetNgrams) {
+    int matches = 0;
+    for (const string &ngram : targetNgrams) {
+        if (sourceMap.getFrequency(ngram) > 0) {
+            matches++;
+        }
+    }
+    return (float(matches) / targetNgrams.size()) * 100;
+}*/
