@@ -87,7 +87,7 @@ list<string> generateNgrams(const vector<string> &tokens, int n) {
     return ngrams;
 }
 
-/* Function to calculate plagiarism percentage
+ //Function to calculate plagiarism percentage
 float calculatePlagiarism(HashMap &sourceMap, const list<string> &targetNgrams) {
     int matches = 0;
     for (const string &ngram : targetNgrams) {
@@ -96,4 +96,38 @@ float calculatePlagiarism(HashMap &sourceMap, const list<string> &targetNgrams) 
         }
     }
     return (float(matches) / targetNgrams.size()) * 100;
-}*/
+}
+
+int main() {
+    string sourceFile = "source.txt";
+    string targetFile = "target.txt";
+
+    // Read files
+    string sourceText = readFile(sourceFile);
+    string targetText = readFile(targetFile);
+
+    if (sourceText.empty() || targetText.empty()) {
+        return 1;
+    }
+
+    // Tokenize text
+    vector<string> sourceTokens = tokenize(sourceText);
+    vector<string> targetTokens = tokenize(targetText);
+
+    // Generate N-grams using linked lists
+    int n = 3; // Change N-gram size if needed
+    list<string> sourceNgrams = generateNgrams(sourceTokens, n);
+    list<string> targetNgrams = generateNgrams(targetTokens, n);
+
+    // Store source N-grams in a hash map
+    HashMap sourceMap;
+    for (const string &ngram : sourceNgrams) {
+        sourceMap.insert(ngram);
+    }
+
+    // Calculate plagiarism percentage
+    float plagiarismPercentage = calculatePlagiarism(sourceMap, targetNgrams);
+    cout << "Plagiarism Percentage: " << plagiarismPercentage << "%" << endl;
+
+    return 0;
+}
