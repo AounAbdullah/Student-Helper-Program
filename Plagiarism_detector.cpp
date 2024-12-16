@@ -98,6 +98,24 @@ float calculatePlagiarism(HashMap &sourceMap, const list<string> &targetNgrams) 
     return (float(matches) / targetNgrams.size()) * 100;
 }
 
+// Function to filter out common words
+vector<string> filterCommonWords(const vector<string> &tokens, const vector<string> &commonWords) {
+    vector<string> filteredTokens;
+    for (const string &token : tokens) {
+        bool isCommon = false;
+        for (const string &commonWord : commonWords) {
+            if (token == commonWord) {
+                isCommon = true;
+                break;
+            }
+        }
+        if (!isCommon) {
+            filteredTokens.push_back(token);
+        }
+    }
+    return filteredTokens;
+}
+
 int main() {
     string sourceFile = "source.txt";
     string targetFile = "target.txt";
@@ -110,12 +128,19 @@ int main() {
         return 1;
     }
 
+    // Define common words to ignore
+    vector<string> commonWords = {"the", "is", "a", "an", "and", "or", "in", "on", "at", "this", "that", "with", "to", "for", "of"};
+
     // Tokenize text
     vector<string> sourceTokens = tokenize(sourceText);
     vector<string> targetTokens = tokenize(targetText);
 
+    // Filter out common words
+    sourceTokens = filterCommonWords(sourceTokens, commonWords);
+    targetTokens = filterCommonWords(targetTokens, commonWords);
+
     // Generate N-grams using linked lists
-    int n = 3; // Change N-gram size if needed
+    int n = 4; // Change N-gram size if needed
     list<string> sourceNgrams = generateNgrams(sourceTokens, n);
     list<string> targetNgrams = generateNgrams(targetTokens, n);
 
