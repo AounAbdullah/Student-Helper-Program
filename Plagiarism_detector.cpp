@@ -5,6 +5,42 @@
 #include <list>
 
 using namespace std;
+// Simple hash map implementation
+class HashMap {
+private:
+    static const int TABLE_SIZE = 1000;
+    vector<pair<string, int>> table[TABLE_SIZE];
+
+    int hashFunction(const string &key) {
+        int hash = 0;
+        for (char c : key) {
+            hash = (hash * 31 + c) % TABLE_SIZE;
+        }
+        return hash;
+    }
+
+public:
+    void insert(const string &key) {
+        int hashIndex = hashFunction(key);
+        for (auto &entry : table[hashIndex]) {
+            if (entry.first == key) {
+                entry.second++;
+                return;
+            }
+        }
+        table[hashIndex].emplace_back(key, 1);
+    }
+
+    int getFrequency(const string &key) {
+        int hashIndex = hashFunction(key);
+        for (const auto &entry : table[hashIndex]) {
+            if (entry.first == key) {
+                return entry.second;
+            }
+        }
+        return 0;
+    }
+};
 
 // This function is being implemented to read a file and return its contents in the form of a string 
 string readFile(const string &filename) {
