@@ -20,6 +20,7 @@ public:
         this->deadline = deadline;
         this->is_completed = is_completed;
     }
+    
 
     // getter functions
     string getname() const

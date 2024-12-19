@@ -81,6 +81,18 @@ public:
         heapifyDown(0);
         return topTask;
     }
+    bool removeByName(const std::string& taskName) {
+    for (int i = 0; i < size; ++i) {
+        if (heap[i].getname() == taskName) {
+            heap[i] = heap[size - 1];
+            size--;
+            heapifyDown(i);
+            return true;
+        }
+    }
+    return false; // Task not found
+}
+
 
     // Peek at the highest-priority task without removing it
     Task peek() const {

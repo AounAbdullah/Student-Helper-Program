@@ -6,101 +6,84 @@
 #include "Prioirty_Queue.cpp"
 #include "Linked_List.cpp"
 
+
 class Scheduler {
 private:
-    PriorityQueue taskQueue;              // Priority Queue to hold tasks based on priority
-    LinkedList completedTasks;            // Linked List for completed tasks
-    LinkedList pendingTasks;              // Linked List for deferred tasks
-
-    Task currentTask;                     // The task currently being executed
-    std::string schedulerName;            // Scheduler instance name
+    PriorityQueue taskQueue;              // Priority queue for active tasks
+    LinkedList completedTasks;            // Linked list for completed tasks
+    LinkedList pendingTasks;              // Linked list for deferred tasks
     int totalTasks = 0;                   // Counter for total tasks
     int completedCount = 0;               // Counter for completed tasks
 
 public:
     // Constructor
-    Scheduler(const std::string& name) : schedulerName(name) {}
+    Scheduler(int capacity) : taskQueue(capacity) {}
 
-    // 1. Task Management Functions
-
-    // Add a new task to the priority queue
+    // Add a task to the priority queue
     void addTask(const Task& task) {
-        taskQueue.push(task);
+        taskQueue.enqueue(task);
         totalTasks++;
     }
-
-    // Remove a task by name from the priority queue
+    
+    // Remove a task by name
     void removeTask(const std::string& taskName) {
-        taskQueue.remove(taskName);
-    }
-
-    // 2. Scheduling Functions
-
-    // Get the next task based on priority (highest priority task)
-    Task getNextTask() {
-        return taskQueue.top();
-    }
-
-    // Defer a task (move it to pendingTasks)
-    void deferTask(const std::string& taskName) {
-        Task deferredTask = taskQueue.removeAndGet(taskName);
-        pendingTasks.add(deferredTask);
-    }
-
-    // Execute the next task (highest priority task)
-    void executeNextTask() {
-        if (!taskQueue.empty()) {
-            currentTask = taskQueue.top();
-            taskQueue.pop();
-            completedTasks.add(currentTask);
-            completedCount++;
-        } else {
-            std::cout << "No tasks left to execute." << std::endl;
+        if (!taskQueue.removeByName(taskName)) {
+            std::cout << "Task not found in the priority queue.\n";
         }
     }
 
-    // 3. Status Queries
+    // Defer a task (move to pending list)
+    void deferTask(const std::string& taskName) {
+        Task deferredTask;
+        if (taskQueue.removeByName(taskName)) {
+            deferredTask = taskQueue.peek(); // Assuming taskQueue.peek() fetches the removed task
+            pendingTasks.append(deferredTask);
+        } else {
+            std::cout << "Task not found to defer.\n";
+        }
+    }
 
-    // Display all tasks in the taskQueue and pendingTasks
+    // Execute the next task (highest priority)
+    void executeNextTask() {
+        if (!taskQueue.isEmpty()) {
+            Task nextTask = taskQueue.dequeue();
+            nextTask.setCompletionStatus(true); // Assuming Task has a `markComplete()` method
+            completedTasks.append(nextTask);
+            completedCount++;
+        } else {
+            std::cout << "No tasks to execute.\n";
+        }
+    }
+
+    // Display all tasks
     void displayAllTasks() {
+        std::cout << "Active Tasks:\n";
         taskQueue.display();
-        pendingTasks.display();
+        std::cout << "Pending Tasks:\n";
+        pendingTasks.print();
     }
 
     // Display completed tasks
     void displayCompletedTasks() {
-        completedTasks.display();
+        std::cout << "Completed Tasks:\n";
+        completedTasks.print();
     }
 
-    // Display pending tasks
-    void displayPendingTasks() {
-        pendingTasks.display();
-    }
-
-    // 4. Summary Functions
-
-    int getTotalTasks() const {
-        return totalTasks;
-    }
-
-    int getCompletedTaskCount() const {
-        return completedCount;
-    }
-
-    int getPendingTaskCount() const {
-        return pendingTasks.size();
-    }
+    // Summary functions
+    int getTotalTasks() { return totalTasks; }
+    int getCompletedTaskCount()  { return completedCount; }
+    int getPendingTaskCount()  { return pendingTasks.size(); }
 };
 
 int main() {
-    Scheduler dailyScheduler("Daily Scheduler");
+    Scheduler dailyScheduler(10); // Create a scheduler with capacity 10
 
     // Create some tasks
-    Task task1("Task 1", 2);
-    Task task2("Task 2", 1);
-    Task task3("Task 3", 3);
+    Task task1("Study for exam", 2, "2024-12-20", false);
+    Task task2("Submit project", 1, "2024-12-18", false);
+    Task task3("Attend meeting", 3, "2024-12-22", false);
 
-    // Add tasks to scheduler
+    // Add tasks
     dailyScheduler.addTask(task1);
     dailyScheduler.addTask(task2);
     dailyScheduler.addTask(task3);
@@ -114,12 +97,10 @@ int main() {
     // Display completed tasks
     dailyScheduler.displayCompletedTasks();
 
-    // Display pending tasks
-    dailyScheduler.displayPendingTasks();
-
     // Defer a task
-    dailyScheduler.deferTask("Task 3");
-    dailyScheduler.displayPendingTasks();
+    dailyScheduler.deferTask("Attend meeting");
+    dailyScheduler.displayAllTasks();
 
     return 0;
 }
+

@@ -1,42 +1,46 @@
-#include<iostream>
+#include <iostream>
 #include "TM_Task.cpp"
 using namespace std;
 
-class Node{
-    public:
+class Node
+{
+public:
     Task value;
-    Node* next;
-    Node* pre;
+    Node *next;
+    Node *pre;
 
-    Node(Task value){
+    Node(Task value)
+    {
         this->value = value;
         next = nullptr;
         pre = nullptr;
     }
-
 };
 
-class LinkedList{
-    public:
-    Node* head;
-    Node* tail;
+class LinkedList
+{
+public:
+    Node *head;
+    Node *tail;
     int length;
 
-    LinkedList(){
+    LinkedList()
+    {
         head = nullptr;
         tail = nullptr;
         length = 0;
     }
-    void print(){
+    void print()
+    {
         Node *temp = head;
         while (temp)
-    {
-        cout << "Task Name: " << temp->value.getname() << ", ";
-        cout << "Priority: " << temp->value.getPriority() << ", ";
-        cout << "Deadline: " << temp->value.getDeadline() << ", ";
-        cout << "Completed: " << (temp->value.getCompletionStatus() ? "Yes" : "No") << endl;
-        temp = temp->next;
-    }
+        {
+            cout << "Task Name: " << temp->value.getname() << ", ";
+            cout << "Priority: " << temp->value.getPriority() << ", ";
+            cout << "Deadline: " << temp->value.getDeadline() << ", ";
+            cout << "Completed: " << (temp->value.getCompletionStatus() ? "Yes" : "No") << endl;
+            temp = temp->next;
+        }
         cout << endl;
     }
     void append(Task value)
@@ -169,7 +173,8 @@ class LinkedList{
             return true;
         }
         Node *bef = head;
-        for (int i = 0; i < index - 1; i++){
+        for (int i = 0; i < index - 1; i++)
+        {
             bef = bef->next;
         }
         Node *temp = bef->next;
@@ -180,31 +185,68 @@ class LinkedList{
         length++;
         return true;
     }
-    
-    void deletenode(int index){
+
+    void deletenode(int index)
+    {
         if (index < 0 || index > length)
         {
-            return ;
+            return;
         }
-        if(head == nullptr){
-            return ;
+        if (head == nullptr)
+        {
+            return;
         }
-        if(index == 0){
+        if (index == 0)
+        {
             return deletefirst();
         }
-        if(index == length){
+        if (index == length)
+        {
             return deletelast();
-            
         }
-        Node* temp = head;
-        for(int i = 0; i < index ; i++){
+        Node *temp = head;
+        for (int i = 0; i < index; i++)
+        {
             temp = temp->next;
         }
-        Node*temp = get(index);
+        Node *temp = get(index);
         temp->next->pre = temp->pre;
         temp->pre->next = temp->next;
         delete temp;
         length--;
     }
 
+    bool removeByName(const std::string &taskName)
+    {
+        Node *temp = head;
+        while (temp)
+        {
+            if (temp->value.getname() == taskName)
+            {
+                if (temp == head)
+                {
+                    deletefirst();
+                }
+                else if (temp == tail)
+                {
+                    deletelast();
+                }
+                else
+                {
+                    temp->pre->next = temp->next;
+                    temp->next->pre = temp->pre;
+                    delete temp;
+                    length--;
+                }
+                return true;
+            }
+            temp = temp->next;
+        }
+        return false; // Task not found
+    }
+
+    int size()
+    {
+        return length;
+    }
 };
