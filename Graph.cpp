@@ -2,27 +2,34 @@
 #include "TM_Task.cpp" // Include Task class
 using namespace std;
 
-class Node {
+class Node
+{
 public:
     Task task;
     int dependencies[10]; // Array for dependencies
     int dependencyCount;
 
-    Node() : dependencyCount(0) {
-        for (int i = 0; i < 10; ++i) {
+    Node() : dependencyCount(0)
+    {
+        for (int i = 0; i < 10; ++i)
+        {
             dependencies[i] = -1;
         }
     }
 };
 
-class Graph {
+class Graph
+{
 private:
     Node nodes[100]; // Fixed-size array for nodes
     int nodeCount;
 
-    int findTaskIndex(const string& taskName) {
-        for (int i = 0; i < nodeCount; ++i) {
-            if (nodes[i].task.getname() == taskName) {
+    int findTaskIndex(const string &taskName)
+    {
+        for (int i = 0; i < nodeCount; ++i)
+        {
+            if (nodes[i].task.getname() == taskName)
+            {
                 return i;
             }
         }
@@ -33,12 +40,15 @@ public:
     Graph() : nodeCount(0) {}
 
     // Add a new task
-    void addTask(const Task& task) {
-        if (findTaskIndex(task.getname()) != -1) {
+    void addTask(const Task &task)
+    {
+        if (findTaskIndex(task.getname()) != -1)
+        {
             cout << "Task already exists!\n";
             return;
         }
-        if (nodeCount >= 100) {
+        if (nodeCount >= 100)
+        {
             cout << "Maximum number of tasks reached!\n";
             return;
         }
@@ -47,41 +57,59 @@ public:
     }
 
     // Add a dependency between tasks
-    void addDependency(const string& taskName, const string& dependsOn) {
+    void addDependency(const string &taskName, const string &dependsOn)
+    {
         int taskIndex = findTaskIndex(taskName);
         int dependsOnIndex = findTaskIndex(dependsOn);
 
-        if (taskIndex == -1 || dependsOnIndex == -1) {
+        if (taskIndex == -1 || dependsOnIndex == -1)
+        {
             cout << "One or both tasks not found!\n";
             return;
         }
 
-        if (nodes[taskIndex].dependencyCount < 10) {
+        if (nodes[taskIndex].dependencyCount < 10)
+        {
             nodes[taskIndex].dependencies[nodes[taskIndex].dependencyCount++] = dependsOnIndex;
-        } else {
+        }
+        else
+        {
             cout << "Maximum dependencies reached for task: " << taskName << "\n";
         }
     }
 
     // Display all tasks and their dependencies
-    void displayDependencies() const {
+    void displayDependencies() const
+    {
         cout << "Task Dependencies:\n";
-        for (int i = 0; i < nodeCount; ++i) {
+        for (int i = 0; i < nodeCount; ++i)
+        {
             cout << "Task: " << nodes[i].task.getname() << " depends on: ";
-            for (int j = 0; j < nodes[i].dependencyCount; ++j) {
-                cout << nodes[nodes[i].dependencies[j]].task.getname() << " ";
+            if (nodes[i].dependencyCount == 0)
+            {
+                cout << "null";
             }
-            cout << "\n";
+            else
+            {
+                for (int j = 0; j < nodes[i].dependencyCount; ++j)
+                {
+                    cout << nodes[nodes[i].dependencies[j]].task.getname() << " ";
+                }
+            }
+            cout << endl;
         }
     }
 
     // Topological Sort to get execution order
-    void getExecutionOrder() {
+    void getExecutionOrder()
+    {
         int inDegree[100] = {0};
 
         // Calculate in-degrees
-        for (int i = 0; i < nodeCount; ++i) {
-            for (int j = 0; j < nodes[i].dependencyCount; ++j) {
+        for (int i = 0; i < nodeCount; ++i)
+        {
+            for (int j = 0; j < nodes[i].dependencyCount; ++j)
+            {
                 inDegree[nodes[i].dependencies[j]]++;
             }
         }
@@ -90,8 +118,10 @@ public:
         int zeroInDegree[100];
         int zeroCount = 0;
 
-        for (int i = 0; i < nodeCount; ++i) {
-            if (inDegree[i] == 0) {
+        for (int i = 0; i < nodeCount; ++i)
+        {
+            if (inDegree[i] == 0)
+            {
                 zeroInDegree[zeroCount++] = i;
             }
         }
@@ -100,35 +130,41 @@ public:
         string executionOrder[100];
         int execCount = 0;
 
-        while (zeroCount > 0) {
+        while (zeroCount > 0)
+        {
             int current = zeroInDegree[--zeroCount];
             executionOrder[execCount++] = nodes[current].task.getname();
 
-            for (int j = 0; j < nodes[current].dependencyCount; ++j) {
+            for (int j = 0; j < nodes[current].dependencyCount; ++j)
+            {
                 int dep = nodes[current].dependencies[j];
                 inDegree[dep]--;
-                if (inDegree[dep] == 0) {
+                if (inDegree[dep] == 0)
+                {
                     zeroInDegree[zeroCount++] = dep;
                 }
             }
         }
 
         // Check for cycles
-        if (execCount != nodeCount) {
+        if (execCount != nodeCount)
+        {
             cout << "Cyclic dependency detected!\n";
             return;
         }
 
         // Display execution order
         cout << "\nExecution Order:\n";
-        for (int i = 0; i < execCount; ++i) {
+        for (int i = 0; i < execCount; ++i)
+        {
             cout << executionOrder[i] << " ";
         }
         cout << "\n";
     }
 };
 
-int main() {
+int main()
+{
     Graph graph;
 
     // Add tasks
