@@ -5,40 +5,64 @@
 #include <list>
 
 using namespace std;
+
+const int HASH_SIZE = 1000;
 // Simple hash map implementation
 class HashMap {
-private:
-    static const int TABLE_SIZE = 1000;
-    vector<pair<string, int>> table[TABLE_SIZE];
+    struct Node {
+        string key;
+        int value;
+        Node* next;
+        Node(string k, int v) : key(k), value(v), next(nullptr) {}
+    };
+    Node* table[HASH_SIZE];
 
-    int hashFunction(const string &key) {
+    int hashFunction(const string& key) {
         int hash = 0;
-        for (char c : key) {
-            hash = (hash * 31 + c) % TABLE_SIZE;
-        }
+        for (char c : key) hash = (hash * 31 + c) % HASH_SIZE;
         return hash;
     }
 
 public:
-    void insert(const string &key) {
-        int hashIndex = hashFunction(key);
-        for (auto &entry : table[hashIndex]) {
-            if (entry.first == key) {
-                entry.second++;
-                return;
-            }
-        }
-        table[hashIndex].emplace_back(key, 1);
+    HashMap() {
+        for (int i = 0; i < HASH_SIZE; i++) table[i] = nullptr;
     }
 
-    int getFrequency(const string &key) {
-        int hashIndex = hashFunction(key);
-        for (const auto &entry : table[hashIndex]) {
-            if (entry.first == key) {
-                return entry.second;
+    void insert(const string& key) {
+        int idx = hashFunction(key);
+        Node* node = table[idx];
+        while (node) {
+            if (node->key == key) {
+                node->value++;
+                return;
             }
+            node = node->next;
+        }
+        Node* newNode = new Node(key, 1);
+        newNode->next = table[idx];
+        table[idx] = newNode;
+    }
+
+    int get(const string& key) {
+        int idx = hashFunction(key);
+        Node* node = table[idx];
+        while (node) {
+            if (node->key == key) return node->value;
+            node = node->next;
         }
         return 0;
+    }
+
+    vector<string> getAllKeys() {
+        vector<string> keys;
+        for (int i = 0; i < HASH_SIZE; i++) {
+            Node* node = table[i];
+            while (node) {
+                keys.push_back(node->key);
+                node = node->next;
+            }
+        }
+        return keys;
     }
 };
 
@@ -87,15 +111,47 @@ list<string> generateNgrams(const vector<string> &tokens, int n) {
     return ngrams;
 }
 
- //Function to calculate plagiarism percentage
-float calculatePlagiarism(HashMap &sourceMap, const list<string> &targetNgrams) {
-    int matches = 0;
-    for (const string &ngram : targetNgrams) {
-        if (sourceMap.getFrequency(ngram) > 0) {
-            matches++;
+float jaccardSimilarity(const string& ngram1, const string& ngram2) {
+    vector<string> words1, words2;
+    stringstream ss1(ngram1), ss2(ngram2);
+    string word;
+
+    while (ss1 >> word) words1.push_back(word);
+    while (ss2 >> word) words2.push_back(word);
+
+    int intersection = 0, unionSize = words1.size() + words2.size();
+
+    for (const string& w1 : words1) {
+        for (size_t i = 0; i < words2.size(); i++) {
+            if (w1 == words2[i]) {
+                intersection++;
+                words2[i] = ""; // Mark as used
+                break;
+            }
         }
     }
-    return (float(matches) / targetNgrams.size()) * 100;
+
+    return unionSize == 0 ? 0.0 : float(intersection) / (unionSize - intersection);
+}
+
+ //Function to calculate plagiarism percentage
+float calculatePlagiarism(HashMap& sourceMap, const list<string>& targetNgrams, float threshold = 0.8) {
+    int matches = 0; // Total matching N-grams
+    int totalTargetNgrams = targetNgrams.size(); // Total target N-grams
+
+    vector<string> sourceKeys = sourceMap.getAllKeys(); // All source N-grams
+    for (const string& target : targetNgrams) {
+        bool matchFound = false;
+        for (const string& source : sourceKeys) {
+            if (jaccardSimilarity(target, source) >= threshold) {
+                matchFound = true;
+                break; // Stop comparing after the first match
+            }
+        }
+        if (matchFound) matches++;
+    }
+
+    return totalTargetNgrams == 0 ? 0.0 : (float(matches) / totalTargetNgrams) * 100; 
 }
 
 // Function to filter out common words
@@ -139,17 +195,16 @@ int main() {
     sourceTokens = filterCommonWords(sourceTokens, commonWords);
     targetTokens = filterCommonWords(targetTokens, commonWords);
 
-    // Generate N-grams using linked lists
-    int n = 4; // Change N-gram size if needed
+    // Generate N-grams
+    int n = 3; // Change N-gram size if needed
     list<string> sourceNgrams = generateNgrams(sourceTokens, n);
     list<string> targetNgrams = generateNgrams(targetTokens, n);
 
     // Store source N-grams in a hash map
     HashMap sourceMap;
-    for (const string &ngram : sourceNgrams) {
+    for (const string& ngram : sourceNgrams) {
         sourceMap.insert(ngram);
     }
-
     // Calculate plagiarism percentage
     float plagiarismPercentage = calculatePlagiarism(sourceMap, targetNgrams);
     cout << "Plagiarism Percentage: " << plagiarismPercentage << "%" << endl;
