@@ -117,22 +117,3 @@ public:
     }
 };
 
-// Example usage
-int main() {
-    PriorityQueue pq(10); // Create a priority queue with capacity 10
-
-    pq.enqueue(Task("Study for exam", 2, "2024-12-20", false));
-    pq.enqueue(Task("Submit project", 1, "2024-12-18", false));
-    pq.enqueue(Task("Attend meeting", 3, "2024-12-22", false));
-
-    pq.display();
-
-    cout << "\nDequeuing tasks by priority:\n";
-    while (!pq.isEmpty()) {
-        Task t = pq.dequeue();
-        cout << "Task: " << t.getname() << ", Priority: " << t.getPriority()
-             << ", Deadline: " << t.getDeadline() << "\n";
-    }
-
-    return 0;
-}
