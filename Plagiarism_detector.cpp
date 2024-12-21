@@ -172,42 +172,113 @@ vector<string> filterCommonWords(const vector<string> &tokens, const vector<stri
     return filteredTokens;
 }
 
-int main() {
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <list>
+
+using namespace std;
+
+// (Existing classes and functions omitted for brevity)
+
+void displayMenu() {
+    cout << "======== MENU ========\n";
+    cout << "1. Analyze Plagiarism\n";
+    cout << "2. Set N-gram Size\n";
+    cout << "3. Set Similarity Threshold\n";
+    cout << "4. Choose Files\n";
+    cout << "5. Exit\n";
+    cout << "======================\n";
+    cout << "Enter your choice: ";
+}
+
+void menu() {
+    int n = 3; // Default N-gram size
+    float threshold = 0.8; // Default similarity threshold
     string sourceFile = "source.txt";
     string targetFile = "target.txt";
 
-    // Read files
-    string sourceText = readFile(sourceFile);
-    string targetText = readFile(targetFile);
+    while (true) {
+        displayMenu();
 
-    if (sourceText.empty() || targetText.empty()) {
-        return 1;
+        int choice;
+        cin >> choice;
+
+        if (choice == 1) {
+            // Read source and target files
+            string sourceText = readFile(sourceFile);
+            string targetText = readFile(targetFile);
+
+            if (sourceText.empty() || targetText.empty()) {
+                cout << "Error reading files. Please check the file paths.\n";
+                continue;
+            }
+
+            // Define common words
+            vector<string> commonWords = {"the", "is", "a", "an", "and", "or", "in", "on", "at", "this", "that", "with", "to", "for", "of"};
+
+            // Tokenize text and filter common words
+            vector<string> sourceTokens = filterCommonWords(tokenize(sourceText), commonWords);
+            vector<string> targetTokens = filterCommonWords(tokenize(targetText), commonWords);
+
+            // Generate N-grams
+            list<string> sourceNgrams = generateNgrams(sourceTokens, n);
+            list<string> targetNgrams = generateNgrams(targetTokens, n);
+
+            // Create hash map for source N-grams
+            HashMap sourceMap;
+            for (const string& ngram : sourceNgrams) {
+                sourceMap.insert(ngram);
+            }
+
+            // Calculate plagiarism percentage
+            float plagiarismPercentage = calculatePlagiarism(sourceMap, targetNgrams, threshold);
+            cout << "Plagiarism Percentage: " << plagiarismPercentage << "%\n";
+
+        } else if (choice == 2) {
+            cout << "Enter new N-gram size: ";
+            cin >> n;
+            if (n <= 0) {
+                cout << "Invalid N-gram size. Must be greater than 0.\n";
+                n = 3; // Reset to default
+            }
+
+        } else if (choice == 3) {
+            cout << "Enter new similarity threshold (0.0 to 1.0): ";
+            cin >> threshold;
+            if (threshold < 0.0 || threshold > 1.0) {
+                cout << "Invalid threshold. Must be between 0.0 and 1.0.\n";
+                threshold = 0.8; // Reset to default
+            }
+
+        } else if (choice == 4) {
+            cout << "Enter path to source file: ";
+            cin >> sourceFile;
+            cout << "Enter path to target file: ";
+            cin >> targetFile;
+            
+            // Test file paths
+            string testSource = readFile(sourceFile);
+            string testTarget = readFile(targetFile);
+
+            if (testSource.empty() || testTarget.empty()) {
+                cout << "Error reading files. Reverting to previous file paths.\n";
+            } else {
+                cout << "Files successfully updated.\n";
+            }
+
+        } else if (choice == 5) {
+            cout << "Exiting program. Goodbye!\n";
+            break;
+
+        } else {
+            cout << "Invalid choice. Please try again.\n";
+        }
     }
+}
 
-    // Define common words to ignore
-    vector<string> commonWords = {"the", "is", "a", "an", "and", "or", "in", "on", "at", "this", "that", "with", "to", "for", "of"};
-
-    // Tokenize text
-    vector<string> sourceTokens = tokenize(sourceText);
-    vector<string> targetTokens = tokenize(targetText);
-
-    // Filter out common words
-    sourceTokens = filterCommonWords(sourceTokens, commonWords);
-    targetTokens = filterCommonWords(targetTokens, commonWords);
-
-    // Generate N-grams
-    int n = 3; // Change N-gram size if needed
-    list<string> sourceNgrams = generateNgrams(sourceTokens, n);
-    list<string> targetNgrams = generateNgrams(targetTokens, n);
-
-    // Store source N-grams in a hash map
-    HashMap sourceMap;
-    for (const string& ngram : sourceNgrams) {
-        sourceMap.insert(ngram);
-    }
-    // Calculate plagiarism percentage
-    float plagiarismPercentage = calculatePlagiarism(sourceMap, targetNgrams);
-    cout << "Plagiarism Percentage: " << plagiarismPercentage << "%" << endl;
-
+int main() {
+    menu();
     return 0;
 }
