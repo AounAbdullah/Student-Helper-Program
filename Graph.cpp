@@ -2,14 +2,14 @@
 #include "TM_Task.cpp" // Include Task class
 using namespace std;
 
-class Node
+class GraphNode
 {
 public:
     Task task;
     int dependencies[10]; // Array for dependencies
     int dependencyCount;
 
-    Node() : dependencyCount(0)
+    GraphNode() : dependencyCount(0)
     {
         for (int i = 0; i < 10; ++i)
         {
@@ -21,14 +21,14 @@ public:
 class Graph
 {
 private:
-    Node nodes[100]; // Fixed-size array for nodes
-    int nodeCount;
+    GraphNode GraphNodes[100]; // Fixed-size array for GraphNodes
+    int GraphNodeCount;
 
     int findTaskIndex(const string &taskName)
     {
-        for (int i = 0; i < nodeCount; ++i)
+        for (int i = 0; i < GraphNodeCount; ++i)
         {
-            if (nodes[i].task.getname() == taskName)
+            if (GraphNodes[i].task.getname() == taskName)
             {
                 return i;
             }
@@ -37,7 +37,7 @@ private:
     }
 
 public:
-    Graph() : nodeCount(0) {}
+    Graph() : GraphNodeCount(0) {}
 
     // Add a new task
     void addTask(const Task &task)
@@ -47,13 +47,13 @@ public:
             cout << "Task already exists!\n";
             return;
         }
-        if (nodeCount >= 100)
+        if (GraphNodeCount >= 100)
         {
             cout << "Maximum number of tasks reached!\n";
             return;
         }
-        nodes[nodeCount].task = task;
-        nodeCount++;
+        GraphNodes[GraphNodeCount].task = task;
+        GraphNodeCount++;
     }
 
     // Add a dependency between tasks
@@ -68,9 +68,9 @@ public:
             return;
         }
 
-        if (nodes[taskIndex].dependencyCount < 10)
+        if (GraphNodes[taskIndex].dependencyCount < 10)
         {
-            nodes[taskIndex].dependencies[nodes[taskIndex].dependencyCount++] = dependsOnIndex;
+            GraphNodes[taskIndex].dependencies[GraphNodes[taskIndex].dependencyCount++] = dependsOnIndex;
         }
         else
         {
@@ -82,18 +82,18 @@ public:
     void displayDependencies() const
     {
         cout << "Task Dependencies:\n";
-        for (int i = 0; i < nodeCount; ++i)
+        for (int i = 0; i < GraphNodeCount; ++i)
         {
-            cout << "Task: " << nodes[i].task.getname() << " depends on: ";
-            if (nodes[i].dependencyCount == 0)
+            cout << "Task: " << GraphNodes[i].task.getname() << " depends on: ";
+            if (GraphNodes[i].dependencyCount == 0)
             {
                 cout << "null";
             }
             else
             {
-                for (int j = 0; j < nodes[i].dependencyCount; ++j)
+                for (int j = 0; j < GraphNodes[i].dependencyCount; ++j)
                 {
-                    cout << nodes[nodes[i].dependencies[j]].task.getname() << " ";
+                    cout << GraphNodes[GraphNodes[i].dependencies[j]].task.getname() << " ";
                 }
             }
             cout << endl;
@@ -106,11 +106,11 @@ public:
         int inDegree[100] = {0};
 
         // Calculate in-degrees
-        for (int i = 0; i < nodeCount; ++i)
+        for (int i = 0; i < GraphNodeCount; ++i)
         {
-            for (int j = 0; j < nodes[i].dependencyCount; ++j)
+            for (int j = 0; j < GraphNodes[i].dependencyCount; ++j)
             {
-                inDegree[nodes[i].dependencies[j]]++;
+                inDegree[GraphNodes[i].dependencies[j]]++;
             }
         }
 
@@ -118,7 +118,7 @@ public:
         int zeroInDegree[100];
         int zeroCount = 0;
 
-        for (int i = 0; i < nodeCount; ++i)
+        for (int i = 0; i < GraphNodeCount; ++i)
         {
             if (inDegree[i] == 0)
             {
@@ -133,11 +133,11 @@ public:
         while (zeroCount > 0)
         {
             int current = zeroInDegree[--zeroCount];
-            executionOrder[execCount++] = nodes[current].task.getname();
+            executionOrder[execCount++] = GraphNodes[current].task.getname();
 
-            for (int j = 0; j < nodes[current].dependencyCount; ++j)
+            for (int j = 0; j < GraphNodes[current].dependencyCount; ++j)
             {
-                int dep = nodes[current].dependencies[j];
+                int dep = GraphNodes[current].dependencies[j];
                 inDegree[dep]--;
                 if (inDegree[dep] == 0)
                 {
@@ -147,7 +147,7 @@ public:
         }
 
         // Check for cycles
-        if (execCount != nodeCount)
+        if (execCount != GraphNodeCount)
         {
             cout << "Cyclic dependency detected!\n";
             return;
@@ -163,24 +163,24 @@ public:
     }
 };
 
-int main()
-{
-    Graph graph;
+// int main()
+// {
+//     Graph graph;
 
-    // Add tasks
-    graph.addTask(Task("Study", 2, "2024-12-20", false));
-    graph.addTask(Task("Submit", 1, "2024-12-18", false));
-    graph.addTask(Task("Meeting", 3, "2024-12-22", false));
+//     // Add tasks
+//     graph.addTask(Task("Study", 2, "2024-12-20", false));
+//     graph.addTask(Task("Submit", 1, "2024-12-18", false));
+//     graph.addTask(Task("Meeting", 3, "2024-12-22", false));
 
-    // Add dependencies
-    graph.addDependency("Submit", "Study");
-    graph.addDependency("Meeting", "Submit");
+//     // Add dependencies
+//     graph.addDependency("Submit", "Study");
+//     graph.addDependency("Meeting", "Submit");
 
-    // Display dependencies
-    graph.displayDependencies();
+//     // Display dependencies
+//     graph.displayDependencies();
 
-    // Get execution order
-    graph.getExecutionOrder();
+//     // Get execution order
+//     graph.getExecutionOrder();
 
-    return 0;
-}
+//     return 0;
+// }

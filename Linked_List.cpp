@@ -209,7 +209,7 @@ public:
         {
             temp = temp->next;
         }
-        Node *temp = get(index);
+       
         temp->next->pre = temp->pre;
         temp->pre->next = temp->next;
         delete temp;
