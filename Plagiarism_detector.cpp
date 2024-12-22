@@ -374,7 +374,7 @@ ReportDetails calculatePlagiarismWithDetails(
 }
 
 // Menu functions
-void displayMenu() {
+void Options() {
     cout << "\n======== PLAGIARISM DETECTOR ========\n";
     cout << "1. Analyze Plagiarism\n";
     cout << "2. Set N-gram Size\n";
@@ -439,7 +439,7 @@ void PD_menu() {
     };
 
     while (true) {
-        displayMenu();
+        Options();
         int choice;
         cin >> choice;
 
