@@ -544,10 +544,10 @@ void PD_menu() {
     }
 }
 
-int main() {
-    cout << "Welcome to Plagiarism Detector!\n";
-    PD_menu();
-    return 0;
-}
+// int main() {
+//     cout << "Welcome to Plagiarism Detector!\n";
+//     PD_menu();
+//     return 0;
+// }
 
 #endif // PLAGIARISM_DETECTOR_H
