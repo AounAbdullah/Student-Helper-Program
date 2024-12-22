@@ -19,7 +19,7 @@ void displayMenu()
     cout << "Enter your choice: ";
 }
 
-int menu()
+void TM_menu()
 {
     Scheduler scheduler(100); // Scheduler with priority queue capacity 100
     Graph taskGraph;
@@ -103,12 +103,12 @@ int menu()
         case 8:
         {
             cout << "Exiting Task Manager. Goodbye!\n";
-            return 0;
+            return;
         }
         default:
             cout << "Invalid choice. Please try again.\n";
         }
     }
 
-    return 0;
+    return ;
 }
