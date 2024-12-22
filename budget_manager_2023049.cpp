@@ -8,21 +8,21 @@ using namespace std;
 string PriorityNames[5]; // Array declared for quick access of Priority Names
 int PriorityRank[5];     // Array declared for accessing Priority Ranks
 
-struct Node
+struct Stack_Node
 {
     int priorityrank_stack;
-    Node *next;
+    Stack_Node *next;
 };
 
 class Stack
 {
 public:
-    Node *top = NULL;
+    Stack_Node *top = NULL;
 
     // Function to push an element to the history stack
     void push(int val)
     {
-        Node *newnode = new Node;
+        Stack_Node *newnode = new Stack_Node;
         newnode->priorityrank_stack = val;
         newnode->next = top;
         top = newnode;
@@ -47,7 +47,7 @@ public:
     // Function to display the history stack elements
     void display()
     {
-        Node *ptr;
+        Stack_Node *ptr;
         if (top == NULL)
         {
             cout << "History is empty" << endl;
