@@ -19,7 +19,7 @@ void displayMenu()
     cout << "Enter your choice: ";
 }
 
-int main()
+int menu()
 {
     Scheduler scheduler(100); // Scheduler with priority queue capacity 100
     Graph taskGraph;
