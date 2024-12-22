@@ -1,6 +1,4 @@
 #include <iostream> // For input/output
-#include <thread>   // For std::this_thread::sleep_for
-#include <chrono>   // For std::chrono::seconds
 using namespace std;
 // 2023049
 // Abdullah Yasin
@@ -387,19 +385,6 @@ void BM_display()
                 count++;
             }
         } while (count < 5);
-
-        // Final validation
-        if (sum_check == 100)
-        {
-            cout << "Budget allocation completed successfully!" << endl;
-        }
-        else
-        {
-            cout << "Error: Total allocation does not equal 100." << endl;
-            cout << "Program will terminate in 5 seconds..." << endl;
-            this_thread::sleep_for(chrono::seconds(5)); // Pause for 5 seconds
-            return;
-        }
 
         for (int i = 0; i < 5; i++)
         {
