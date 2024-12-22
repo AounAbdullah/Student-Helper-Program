@@ -172,16 +172,6 @@ vector<string> filterCommonWords(const vector<string> &tokens, const vector<stri
     return filteredTokens;
 }
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <list>
-
-using namespace std;
-
-// (Existing classes and functions omitted for brevity)
-
 void displayMenu() {
     cout << "======== MENU ========\n";
     cout << "1. Analyze Plagiarism\n";
