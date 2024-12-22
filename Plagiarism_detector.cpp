@@ -273,6 +273,9 @@ void plagiarismMenu() {
 }
 
 int main() {
-    menu();
+    plagiarismMenu();
     return 0;
 }
+
+
+#endif // PLAGIARISM_DETECTOR_H
