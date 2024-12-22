@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include <sstream>
+
 using namespace std;
 
 class Task
@@ -71,30 +71,5 @@ public:
         taskname = name;
         task_priority = priority;
         this->deadline = deadline;
-    }
-
-    //used for saving information
-    string serialize() const
-    {
-        return taskname + "," + std::to_string(task_priority) + "," + deadline + "," + (is_completed ? "1" : "0");
-    }
-
-    //retrieving information from the file
-    static Task deserialize(const string &serializedTask)
-    {
-        // Assuming the format is "taskname,priority,deadline,isCompleted,category"
-        stringstream ss(serializedTask);
-        string name, deadline, category, completedStr;
-        int priority;
-        bool completed;
-
-        getline(ss, name, ',');
-        ss >> priority;
-        getline(ss, deadline, ',');
-        ss >> completedStr;
-        completed = (completedStr == "1");
-       
-
-        return Task(name, priority, deadline, completed);
     }
 };

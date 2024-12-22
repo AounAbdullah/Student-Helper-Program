@@ -76,6 +76,26 @@ public:
             cout << "Task '" << taskName << "' not found in the priority queue.\n";
         }
     }
+    void reactivateTask(const string &taskName)
+    {
+        Node *temp = pendingTasks.head;
+        while (temp)
+        {
+            if (temp->value.getname() == taskName)
+            {
+                // Move task back to active tasks
+                taskQueue.enqueue(temp->value);
+
+                // Remove task from pending list
+                pendingTasks.removeByName(taskName);
+
+                cout << "Task '" << taskName << "' reactivated successfully.\n";
+                return;
+            }
+            temp = temp->next;
+        }
+        cout << "Task '" << taskName << "' not found in pending tasks.\n";
+    }
 
     // Execute the next task (highest priority)
     void executeNextTask()
@@ -129,33 +149,3 @@ public:
     int getCompletedTaskCount() { return completedCount; }
     int getPendingTaskCount() { return pendingTasks.size(); }
 };
-
-// int main()
-// {
-//     Scheduler dailyScheduler(10); // Create a scheduler with capacity 10
-
-//     // Create some tasks
-//     Task task1("Study for exam", 2, "2024-12-20", false);
-//     Task task2("Submit project", 1, "2024-12-18", false);
-//     Task task3("Attend meeting", 3, "2024-12-22", false);
-
-//     // Add tasks
-//     dailyScheduler.addTask(task1);
-//     dailyScheduler.addTask(task2);
-//     dailyScheduler.addTask(task3);
-
-//     // Display all tasks
-//     dailyScheduler.displayAllTasks();
-
-//     // Execute next task
-//     dailyScheduler.executeNextTask();
-
-//     // Display completed tasks
-//     dailyScheduler.displayCompletedTasks();
-
-//     // Defer a task
-//     dailyScheduler.deferTask("Attend meeting");
-//     dailyScheduler.displayAllTasks();
-
-//     return 0;
-// }

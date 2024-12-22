@@ -14,8 +14,9 @@ void displayMenu()
     cout << "4. View Completed Tasks\n";
     cout << "5. Execute Next Task\n";
     cout << "6. Defer a Task\n";
-    cout << "7. View Execution Order\n";
-    cout << "8. Exit\n";
+    cout << "7. Reactivate a Defer task\n";
+    cout << "8. View Execution Order\n";
+    cout << "9. Exit\n";
     cout << "Enter your choice: ";
 }
 
@@ -95,12 +96,23 @@ void TM_menu()
             scheduler.deferTask(taskName);
             break;
         }
+
         case 7:
+        {
+            string taskName;
+            cout << "Enter task name to reactivate: ";
+            cin.ignore();
+            getline(cin, taskName);
+
+            scheduler.reactivateTask(taskName);
+            break;
+        }
+        case 8:
         {
             taskGraph.getExecutionOrder();
             break;
         }
-        case 8:
+        case 9:
         {
             cout << "Exiting Task Manager. Goodbye!\n";
             return;
