@@ -1,7 +1,7 @@
 #include <iostream>
-#include "Plagiarism_detector.h"
-#include "budget_manager_2023049.h"
-#include "Time_Manager_Main.h>
+#include "Plagiarism_detector.cpp"
+#include "budget_manager_2023049.cpp"
+#include "Time_Manager_Main.cpp"
 
 using namespace std;
 
@@ -21,7 +21,7 @@ int main() {
         cin >> choice;
         switch (choice) {
             case 1:
-                budgetMenu();  // Function from budget_manager_2023049.cpp
+                BM_display();  // Function from budget_manager_2023049.cpp
                 break;
             case 2:
                 plagiarismMenu();  // Function from Plagiarism_detector.cpp
