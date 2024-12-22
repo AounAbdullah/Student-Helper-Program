@@ -1,3 +1,7 @@
+// Plagiarism_detector.h
+#ifndef PLAGIARISM_DETECTOR_H
+#define PLAGIARISM_DETECTOR_H
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -183,7 +187,7 @@ void displayMenu() {
     cout << "Enter your choice: ";
 }
 
-void menu() {
+void plagiarismMenu() {
     int n = 3; // Default N-gram size
     float threshold = 0.8; // Default similarity threshold
     string sourceFile = "source.txt";
