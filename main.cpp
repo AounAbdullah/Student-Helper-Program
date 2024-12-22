@@ -22,22 +22,6 @@ int main()
     {
         displayMainMenu();
         cin >> choice;
-        switch (choice)
-        {
-        case 1:
-            BM_display(); // Function from budget_manager_2023049.cpp
-            break;
-        case 2:
-            plagiarismMenu(); // Function from Plagiarism_detector.cpp
-            break;
-        case 3:
-            TM_menu(); // Function from Time_Manager_Main.cpp
-            break;
-        case 4:
-            cout << "Exiting program. Goodbye!\n";
-            break;
-        default:
-            cout << "Invalid choice. Please try again.\n";
         switch (choice) {
             case 1:
                 BM_display();  // Function from budget_manager_2023049.cpp
@@ -57,5 +41,4 @@ int main()
     } while (choice != 4);
 
     return 0;
-    }
 }
