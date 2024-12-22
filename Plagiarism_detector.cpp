@@ -187,7 +187,7 @@ void displayMenu() {
     cout << "Enter your choice: ";
 }
 
-void plagiarismMenu() {
+void PD_menu() {
     int n = 3; // Default N-gram size
     float threshold = 0.8; // Default similarity threshold
     string sourceFile = "source.txt";
@@ -273,7 +273,7 @@ void plagiarismMenu() {
 }
 
 int main() {
-    plagiarismMenu();
+    PD_menu();
     return 0;
 }
 

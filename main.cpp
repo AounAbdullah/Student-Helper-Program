@@ -24,10 +24,10 @@ int main() {
                 BM_display();  // Function from budget_manager_2023049.cpp
                 break;
             case 2:
-                plagiarismMenu();  // Function from Plagiarism_detector.cpp
+                PD_menu();  // Function from Plagiarism_detector.cpp
                 break;
             case 3:
-                timeManagerMenu();  // Function from Time_Manager_Main.cpp
+                TM_menu();  // Function from Time_Manager_Main.cpp
                 break;
             case 4:
                 cout << "Exiting program. Goodbye!\n";
